@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>repl.it</title>
-    <link href="style.css" rel="stylesheet" type="text/css" />
     <style>
       .center {
         margin: 0;
@@ -18,28 +17,7 @@
         height: 100%;
         width: 100%;
       }
-      #duck {
-        width: 80%;
-        position: absolute;
-        top: 40%;
-        left: 35%;
-        right: 50%;
-        transform: translate(-50%, -50%);
-      }
-      .duck {
-        width: 50%;
-        position: absolute;
-        top: 20%;
-        bottom: 70%;
-        left: 100%;
-        transform: translate(-50%, -50%);
-      }
-      #clicks {
-        font-weight: bold;
-        color: black;
-      }
       .duck-button {
-/*         background-image: url('/assets/duck.png'); */
         background-size: cover;
         width: 40%;
         height: 90%;
@@ -52,15 +30,7 @@
       }
       #duck-container img {
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        transition: top 1s linear, opacity 1s linear;
-      }
-      #duck-container img {
-        position: fixed;
-        width: 50%;
+        width: 70%;
         height: 30%;
         transition: top 1s linear, opacity 1s linear;
       }
@@ -74,24 +44,151 @@
         </button>
       </div>
     </div>
-    <img src="https://random-d.uk/api/randomimg" alt="Trulli" width="500" height="333">
-<!--     <img src="https://random-d.uk/api/v2/randomimg" alt="Trulli" width="500" height="333"> -->
     <button id="duck" onclick="createDuck()" class="duck-button"></button>
     <div id="duck-container"></div>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script>
-     function createDuck() {
-  let duckContainer = document.getElementById("duck-container");
-  let duck = document.createElement("img");
-  duck.src = "https://random-d.uk/api/randomimg";
+      let duckContainer = document.getElementById("duck-container");
+      let previousDuckSrc;
+
+      let duckCounter = 0;
+
+      function createDuck() {
+        // remove the previously added image, if any
+        let previousDuck = duckContainer.querySelector("img");
+        if (previousDuck) {
+          previousDuck.remove();
+        }
+
+        // add a new image
+        let duck;
+        do {
+          duck = document.createElement("img");
+          duck.src = "https://random-d.uk/api/randomimg?" + Math.random();
+        } while (duck.src === previousDuckSrc);
+
+        duck.style.position = "fixed";
+        duck.style.top = Math.floor(Math.random() * window.innerHeight) + "px";
+        duck.style.left = Math.floor(Math.random() * window.innerWidth) + "px";
+        duck.style.width = "100px";
+        duckContainer.appendChild(duck);
+
+        // keep track of the new image source as the previous image source
+        previousDuckSrc = duck.src;
+
+        // make the duck fall after a random amount of time (between 0 and 2 seconds)
+        let fallDelay = Math.floor(Math.random() * 2000);
+        setTimeout(function() {
+          duck.style.top = (window.innerHeight + duck.offsetHeight) + "px";
+          duck.style.opacity = "0";
+        }, fallDelay);
+
+        // remove the image after 3 seconds (3000 milliseconds)
+        setTimeout(function() {
+          duck.remove();
+        }, 3000);
+
+        // increase the duck counter and update the button text
+        duckCounter++;
+        document.querySelector(".duck-button").textContent = "Counter: " + duckCounter;
+      }
+    </script>
+  </body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>repl.it</title>
+    <style>
+      .center {
+        margin: 0;
+        position: absolute;
+        top: 95%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+      }
+      html, body {
+        height: 100%;
+        width: 100%;
+      }
+      .duck-button {
+        background-size: cover;
+        width: 40%;
+        height: 90%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: none;
+        background-color: transparent;
+      }
+      #duck-container img {
+        position: fixed;
+        width: 70%;
+        height: 30%;
+        transition: top 1s linear, opacity 1s linear;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="center">
+        <button onclick="createDuck()">
+          <img src="/assets/duck.png" alt="duck">
+        </button>
+      </div>
+    </div>
+    <button id="duck" onclick="createDuck()" class="duck-button"></button>
+    <div id="duck-container"></div>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+let duckContainer = document.getElementById("duck-container");
+let previousDuckSrc;
+
+let duckCounter = 0;
+
+function createDuck() {
+  // remove the previously added image, if any
+  let previousDuck = duckContainer.querySelector("img");
+  if (previousDuck) {
+    previousDuck.remove();
+  }
+  
+  // add a new image
+  let duck;
+  do {
+    duck = document.createElement("img");
+duck.src = "https://random-d.uk/api/randomimg?" + Math.random();
+  } 
+    while (duck.src === previousDuckSrc);
+  
   duck.style.position = "fixed";
   duck.style.top = Math.floor(Math.random() * window.innerHeight) + "px";
   duck.style.left = Math.floor(Math.random() * window.innerWidth) + "px";
   duck.style.width = "100px";
   duckContainer.appendChild(duck);
-  setTimeout(createDuck, onCLick); // create a new duck every 500 milliseconds
+  
+  // keep track of the new image source as the previous image source
+  previousDuckSrc = duck.src;
+  
+  // remove the image after 3 seconds (3000 milliseconds)
+  setTimeout(function() {
+    duck.remove();
+  }, 3000);
+  
+  // increase the duck counter and update the button text
+  duckCounter++;
+  document.querySelector(".duck-button").textContent = "Counter: " + duckCounter;
 }
+
 
     </script>
   </body>
 </html>
+
+ -->
